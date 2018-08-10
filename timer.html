@@ -1,0 +1,280 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+	<title> Timer 2018-2019
+	</title>
+
+
+<script type="text/javascript">
+var c=0
+var c2=0
+var c3=0
+var t
+var t2
+var t3
+var flag=0
+var flag2=0
+var flag3=0
+var totaltime=1440
+
+var deactnode=0
+var date1 = new Date();
+var date2 = new Date();
+var s1;
+var s2;
+var datediff;
+var screenCloseTime;
+var b = 0;
+
+function getTime1() {
+	return (new Date()).getTime();
+}
+
+var lastInterval = getTime1();
+
+function intervalHeartbeat(){
+	var now = getTime1();
+	var diff = now - lastInterval;
+	if(diff>2999){
+		if(flag==1){
+			c=c+Math.floor((diff/1000)-1);
+		}
+		if(flag2==1){
+			c2=c2+Math.floor((diff/1000)-1);
+		}
+		if(flag3==1){
+			c3=c3+Math.floor((diff/1000)-1);
+		}
+	}
+	lastInterval = now;
+}
+
+setInterval(intervalHeartbeat, 1000);
+
+function setFlag(){
+	if(flag==0){
+		flag=1;
+		timedCount(flag);
+	}else{
+		flag=0;
+		timedCount(flag);
+	}
+}
+
+function setFlag2(){
+	if(flag2==0){
+		flag2=1;
+		timedCount2(flag2);
+	}else{
+		flag2=0;
+		timedCount2(flag2);
+	}
+}
+
+function setFlag3(){
+	if(flag3==0){
+		flag3=1;
+		timedCount3(flag3);
+	}else{
+		flag3=0;
+		timedCount3(flag3);
+	}
+}
+
+function clear1(){
+	if(flag==0){
+		c=0;
+	} else if(flag==1){
+		flag=0;
+		c=1;
+	}
+
+	if(flag2==0){
+		c2=0;
+	} else if(flag2==1){
+		flag2=0;
+		c2=1;
+	}
+
+	if(flag3==0){
+		c3=0;
+	} else if(flag3==1){
+		flag3=0;
+		c3=1;
+	}
+
+	document.getElementById('txt').value=c;
+	document.getElementById('retxt_1').value=0;
+	document.getElementById('retxt_1_1').value=0;
+	document.getElementById('txt2').value=c2;
+	document.getElementById('retxt_2').value=0;
+	document.getElementById('retxt_2_1').value=0;
+	document.getElementById('txt3').value=c3;
+	document.getElementById('retxt_3').value=0;
+	document.getElementById('retxt_3_1').value=0;
+	
+}
+
+/*
+let pageVisibility = document.visibilityState;
+document.addEventListener("visibilitychange", function(){
+	if (document.visibilityState == 'hidden'){
+		deactnode=1;
+		s1 = date1.getTime();
+	}
+	if (document.visibilityState == 'visible'){
+		s2 = date2.getTime();
+		if (deactnode==1){
+			datediff = (s2-s1)/1000;
+			if(flag==1){
+				c=c+datediff;
+			}
+			if(flag2==1){
+				c2=c2+datediff;
+			}
+			if(flag3==1){
+				c3=c3+datediff;
+			}
+		}
+		deactnode=0;
+	}
+});
+*/
+
+document.addEventListener('visibilitychange',function() {
+        var d = new Date();
+        
+        if(document.visibilityState=='hidden') {
+        	deactnode=1;
+            b = Math.floor(d.getTime());
+        }else {
+            if (deactnode==1){
+				screenCloseTime = Math.floor((d.getTime()-b)/1000);
+				if(flag==1){
+					c=c+screenCloseTime-1;
+				}
+				if(flag2==1){
+					c2=c2+screenCloseTime-1;
+				}
+				if(flag3==1){
+					c3=c3+screenCloseTime-1;
+				}
+			}
+			deactnode=0;
+        }
+    })
+
+
+
+function timedCount(flag){
+	if(flag==1){
+		document.getElementById('txt').value=c;
+		c=c+1;
+		t=setTimeout("timedCount(flag)",1000);
+	}else{
+		c-=1;
+		setTimeout("document.getElementById('txt').value=c",0);
+		setTimeout("document.getElementById('retxt_1').value=c/60",0);
+		setTimeout("document.getElementById('retxt_1_1').value=c*100/(60*totaltime)",0);
+		clearTimeout(t);
+	}
+}
+
+function timedCount2(flag2){
+	if(flag2==1){
+		document.getElementById('txt2').value=c2;
+		c2=c2+1;
+		t2=setTimeout("timedCount2(flag2)",1000);
+	}else{
+		c2-=1;
+		setTimeout("document.getElementById('txt2').value=c2",0);
+		setTimeout("document.getElementById('retxt_2').value=((c2/60)+7.5*60)",0);
+		setTimeout("document.getElementById('retxt_2_1').value=(c2/(60*totaltime) + 7.5/24)*100",0);
+		clearTimeout(t2);
+	}
+}
+
+function timedCount3(flag3){
+	if(flag3==1){
+		document.getElementById('txt3').value=c3;
+		c3=c3+1;
+		t3=setTimeout("timedCount3(flag3)",1000);
+	}else{
+		c3-=1;
+		setTimeout("document.getElementById('txt3').value=c3",0);
+		setTimeout("document.getElementById('retxt_3').value=c3/60",0);
+		setTimeout("document.getElementById('retxt_3_1').value=c3*100/(60*totaltime)",0);
+		clearTimeout(t3);
+	}
+}
+
+
+</script>
+</head>
+
+
+<body bgcolor="#00BFFF">
+	
+	<h1> Click "Start" to start...</h1>
+
+	<ul type="square">
+	<li style="font-size:48px;color:red;">Study</li>
+	<form>
+	<input type="button" value="计时/暂停" onClick="setFlag()">
+	<input type="text" id="txt">
+	</form>
+	<li style="font-size:48px;color:blue;">Sleep/rest</li>
+	<form>
+	<input type="button" value="计时/暂停" onClick="setFlag2()">
+	<input type="text" id="txt2">
+	</form>
+	<li style="font-size:48px;color:green;">Food</li>
+	<form>
+	<input type="button" value="计时/暂停" onClick="setFlag3()">
+	<input type="text" id="txt3">
+	</form>
+	</ul>
+
+	<h1> Summary </h1>
+
+	<form>
+	<font> Total time used for study is: </font>
+	<input type="text" id="retxt_1">
+	<font> min, which is </font>
+	<input type="text" id="retxt_1_1">
+	<font> % of today! </font>
+	</form>
+
+	<form>
+	<font> Total time used for sleep/rest is: </font>
+	<input type="text" id="retxt_2">
+	<font> min, which is </font>
+	<input type="text" id="retxt_2_1">
+	<font> % of today! </font>
+	</form>
+
+	<form>
+	<font> Total time used for food is: </font>
+	<input type="text" id="retxt_3">
+	<font> min, which is </font>
+	<input type="text" id="retxt_3_1">
+	<font> % of today! </font>
+	</form>
+
+	<h1> Reset </h1>
+	<form>
+	<font> Clear and start a new day!</font>
+	<input type="button" value="清零" onClick="clear1()">
+	</form>
+
+</body>
+
+
+<foot>
+</foot>
+
+
+
+
+
+</html>
